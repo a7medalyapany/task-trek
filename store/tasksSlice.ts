@@ -38,8 +38,14 @@ const tasksSlice = createSlice({
     setFilter: (state, action: PayloadAction<Partial<TasksState['filter']>>) => {
       state.filter = { ...state.filter, ...action.payload };
     },
+    moveTask: (state, action: PayloadAction<{ taskId: number; newState: string }>) => {
+      const taskIndex = state.tasks.findIndex(task => task.id === action.payload.taskId);
+      if (taskIndex !== -1) {
+        state.tasks[taskIndex].state = action.payload.newState as Task['state'];
+      }
+    },
   },
 });
 
-export const { addTask, updateTask, deleteTask, setFilter } = tasksSlice.actions;
+export const { addTask, updateTask, deleteTask, setFilter, moveTask } = tasksSlice.actions;
 export default tasksSlice.reducer;

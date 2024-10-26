@@ -9,6 +9,7 @@ import EditTaskModal from "./EditTaskModal";
 import { Task, State } from "../types";
 import { Plus } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useDrop } from "react-dnd";
 
 const selectTasks = createSelector(
   (state: RootState) => state.tasks.tasks,
@@ -23,7 +24,13 @@ const selectTasks = createSelector(
     )
 );
 
-export default function TaskCard({ title }: { title: State }) {
+export default function TaskCard({
+  title,
+  onDrop,
+}: {
+  title: State;
+  onDrop: (id: number, state: string) => void;
+}) {
   const dispatch = useDispatch();
   const allTasks = useSelector(selectTasks);
   const tasks = useMemo(
@@ -61,8 +68,24 @@ export default function TaskCard({ title }: { title: State }) {
     }
   };
 
+  const [{ canDrop, isOver }, drop] = useDrop({
+    accept: "TASK",
+    drop: (item: { id: number }) => onDrop(item.id, title),
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop(),
+    }),
+  });
+
   return (
-    <div className="flex-grow w-80 bg-card/50 rounded-lg shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl text-white">
+    <div
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
+      ref={drop}
+      className={`flex-grow w-80 bg-card/50 rounded-lg shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl text-white ${
+        isOver && canDrop ? "bg-blue-600" : ""
+      }`}
+    >
       <h2 className="p-4 font-bold text-lg text-card-foreground capitalize">
         {title}
       </h2>
@@ -71,20 +94,14 @@ export default function TaskCard({ title }: { title: State }) {
         style={{ maxHeight: "calc(100vh - 15rem)" }}
       >
         <AnimatePresence>
-          {tasks.map((task) => (
-            <motion.div
+          {tasks.map((task, index) => (
+            <ViewTask
               key={task.id}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-            >
-              <ViewTask
-                task={task}
-                onEdit={handleEditTask}
-                onDelete={handleDeleteTask}
-              />
-            </motion.div>
+              task={task}
+              index={index}
+              onEdit={handleEditTask}
+              onDelete={handleDeleteTask}
+            />
           ))}
         </AnimatePresence>
       </div>
