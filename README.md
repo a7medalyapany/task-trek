@@ -62,7 +62,7 @@ A task management application built with **React**, **Redux Toolkit**, and **Rea
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/a7medalyapany/task-management-app.git
+   https://github.com/a7medalyapany/task-trek.git
    ```
 
 2. Navigate to the project directory:
