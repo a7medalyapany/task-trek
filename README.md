@@ -80,7 +80,7 @@ A task management application built with **React**, **Redux Toolkit**, and **Rea
 4. Start the development server:
 
    ```bash
-   npm start
+   npm run dev
    ```
 
 5. Open your browser and navigate to `http://localhost:3000`.
