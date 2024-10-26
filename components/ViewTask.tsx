@@ -3,9 +3,11 @@ import Image from "next/image";
 import { AlertCircle, CheckCircle, Clock, Pencil, Trash } from "lucide-react";
 import { Task } from "../types";
 import { motion } from "framer-motion";
+import { useDrag } from "react-dnd";
 
 interface ViewTaskProps {
   task: Task;
+  index: number;
   onEdit: (task: Task) => void;
   onDelete: (taskId: number) => void;
 }
@@ -25,13 +27,26 @@ const ViewTask: FC<ViewTaskProps> = ({ task, onEdit, onDelete }) => {
     done: <CheckCircle size={16} className="text-green-500" />,
   };
 
+  const [{ isDragging }, drag] = useDrag({
+    type: "TASK",
+    item: { id: task.id },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+
   return (
     <motion.div
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
+      ref={drag}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.2 }}
-      className="bg-secondary rounded-lg shadow-md overflow-hidden mb-4 relative"
+      className={`bg-secondary rounded-lg shadow-md overflow-hidden mb-4 relative ${
+        isDragging ? "opacity-50" : ""
+      }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -55,10 +70,7 @@ const ViewTask: FC<ViewTaskProps> = ({ task, onEdit, onDelete }) => {
           >
             {task.priority}
           </span>
-          <div className="flex items-center">
-            {stateIcons[task.state]}
-            <span className="ml-1 text-sm">{task.state}</span>
-          </div>
+          {stateIcons[task.state]}
         </div>
       </div>
       {isHovered && (
