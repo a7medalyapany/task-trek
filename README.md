@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Task Management App
+
+A task management application built with **React**, **Redux Toolkit**, and **React Hook Form**, featuring comprehensive CRUD operations for managing tasks. This app allows users to create, edit, delete, and view tasks while utilizing state management and filtering functionalities.
+
+## Features
+
+- **Create New Task**
+  - Users can create tasks with the following inputs:
+    - Title
+    - Priority (Low, Medium `default` , High)
+    - State (todo, doing, done)
+  - Input validation using **React Hook Form** and **Yup**.
+
+- **Edit Task**
+  - Users can edit existing tasks by updating/adding:
+    - Image
+    - Title
+    - Description
+    - Priority
+    - State
+
+- **Delete Task**
+  - Users can delete tasks from the task list.
+
+- **View Task**
+  - Display tasks in a list or card layout including:
+    - Image
+    - Title
+    - Description
+    - Priority
+    - State
+
+- **State Management**
+  - Change the state of a task between todo, doing, and done.
+  - Changes reflect in task details and overall task list.
+
+- **Filtering**
+  - Filter tasks by:
+    - State (todo, doing, done)
+    - Priority (Low, Medium, High)
+    - Search by task name.
+
+## Bonus Features
+
+- Users can drag and drop tasks between states (todo, doing, done).
+
+## Technologies Used
+
+- React
+- Redux Toolkit
+- React Hook Form
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Node.js
+- npm
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Clone the repository:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+   ```bash
+   git clone https://github.com/a7medalyapany/task-management-app.git
+   ```
 
-## Learn More
+2. Navigate to the project directory:
 
-To learn more about Next.js, take a look at the following resources:
+   ```bash
+   cd task-management-app
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. Install dependencies:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   ```bash
+   npm install
+   ```
 
-## Deploy on Vercel
+4. Start the development server:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   ```bash
+   npm start
+   # or
+   yarn start
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+5. Open your browser and navigate to `http://localhost:3000`.
+
+## Usage
+
+- Follow the instructions on the app interface to create, edit, delete, and manage tasks.
+- Use the filtering options to find tasks quickly.
