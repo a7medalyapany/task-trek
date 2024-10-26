@@ -68,7 +68,7 @@ A task management application built with **React**, **Redux Toolkit**, and **Rea
 2. Navigate to the project directory:
 
    ```bash
-   cd task-management-app
+   cd task-trek
    ```
 
 3. Install dependencies:
@@ -81,8 +81,6 @@ A task management application built with **React**, **Redux Toolkit**, and **Rea
 
    ```bash
    npm start
-   # or
-   yarn start
    ```
 
 5. Open your browser and navigate to `http://localhost:3000`.
