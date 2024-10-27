@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Nav from "@/components/Nav";
 import { StoreProvider } from "@/store/StoreProvider";
 
 const geistSans = localFont({
@@ -31,10 +30,7 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <div className="flex flex-col h-screen bg-gradient-to-br from-gray-900 to-blue-900">
-            <Nav />
-            {children}
-          </div>
+          {children}
         </body>
       </html>
     </StoreProvider>
