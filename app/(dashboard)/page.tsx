@@ -1,10 +1,11 @@
 "use client";
 
 import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import { useDispatch } from "react-redux";
-import { moveTask } from "../store/tasksSlice";
+import { HTML5Backend } from "react-dnd-html5-backend";
+
 import TaskCard from "@/components/TaskCard";
+import { moveTask } from "@/store/tasksSlice";
 
 export default function Home() {
   const dispatch = useDispatch();
