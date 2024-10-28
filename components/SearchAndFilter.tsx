@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setFilter } from "../store/tasksSlice";
+import { State } from "@/types";
 
 export default function SearchAndFilter() {
   const dispatch = useDispatch();
@@ -14,7 +15,7 @@ export default function SearchAndFilter() {
   };
 
   const handleStateFilter = (value: string) => {
-    dispatch(setFilter({ state: value === "all" ? null : value }));
+    dispatch(setFilter({ state: value === "all" ? null : (value as State) }));
   };
 
   const handlePriorityFilter = (value: string) => {
