@@ -1,25 +1,15 @@
-"use client";
-
 import { FC, useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { X } from "lucide-react";
 import Image from "next/image";
-
-interface Task {
-  id: number;
-  title: string;
-  description?: string;
-  priority: "Low" | "Medium" | "High";
-  state: "todo" | "doing" | "done";
-  image?: string;
-}
+import { UpdatedTask } from "@/types";
 
 interface EditTaskModalProps {
-  task: Task;
+  task: UpdatedTask;
   onClose: () => void;
-  onSave: (task: Task) => void;
+  onSave: (task: UpdatedTask) => void;
 }
 
 const schema = yup.object().shape({
@@ -41,7 +31,7 @@ const EditTaskModal: FC<EditTaskModalProps> = ({ task, onClose, onSave }) => {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<Omit<Task, "id">>({
+  } = useForm<Omit<UpdatedTask, "id">>({
     defaultValues: task,
     resolver: yupResolver(schema),
   });
@@ -49,7 +39,7 @@ const EditTaskModal: FC<EditTaskModalProps> = ({ task, onClose, onSave }) => {
     task.image || null
   );
 
-  const onSubmit = (data: Omit<Task, "id">) => {
+  const onSubmit = (data: Omit<UpdatedTask, "id">) => {
     onSave({ ...data, id: task.id, image: imagePreview || data.image });
     onClose();
   };

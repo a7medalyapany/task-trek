@@ -1,19 +1,25 @@
-"use client";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "../store/store";
-import { addTask, updateTask, deleteTask } from "../store/tasksSlice";
+import {
+  addTask,
+  updateTask,
+  deleteTask,
+  fetchTasks,
+} from "../store/tasksSlice";
 import ViewTask from "./ViewTask";
 import EditTaskModal from "./EditTaskModal";
 import { Task, State } from "../types";
 import { Plus } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDrop } from "react-dnd";
+import { AppDispatch } from "../store/store";
+import { createClient } from "@/lib/supabase/client";
 
 const selectTasks = createSelector(
-  (state: RootState) => state.tasks.tasks,
-  (state: RootState) => state.tasks.filter,
+  (state: RootState) => state.tasks.tasks || [],
+  (state: RootState) => state.tasks.filter || {},
   (tasks, filter) =>
     tasks.filter(
       (task) =>
@@ -29,39 +35,55 @@ export default function TaskCard({
   onDrop,
 }: {
   title: State;
-  onDrop: (id: number, state: string) => void;
+  onDrop: (id: string, state: State) => void;
 }) {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const allTasks = useSelector(selectTasks);
+  const status = useSelector((state: RootState) => state.tasks.status);
   const tasks = useMemo(
-    () => allTasks.filter((task) => task.state === title),
+    () => (allTasks ? allTasks.filter((task) => task.state === title) : []),
     [allTasks, title]
   );
 
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [editingTask, setEditingTask] = useState<Task | null>(null);
 
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchTasks());
+    }
+  }, [status, dispatch]);
+
   const handleEditTask = (task: Task) => {
     setEditingTask(task);
   };
 
   const handleSaveTask = (updatedTask: Task) => {
-    dispatch(updateTask(updatedTask));
-    setEditingTask(null);
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        dispatch(updateTask({ ...updatedTask, user_id: user.id }));
+        setEditingTask(null);
+      }
+    });
   };
 
-  const handleDeleteTask = (taskId: number) => {
+  const handleDeleteTask = (taskId: string) => {
     dispatch(deleteTask(taskId));
   };
 
-  const handleAddTask = () => {
+  const handleAddTask = async () => {
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (newTaskTitle.trim()) {
-      const newTask: Task = {
-        id: Date.now(),
+      const newTask: Omit<Task, "id"> = {
         title: newTaskTitle.trim(),
         description: "",
         priority: "Medium",
         state: title,
+        user_id: user!.id, // Replace with actual user ID
       };
       dispatch(addTask(newTask));
       setNewTaskTitle("");
@@ -70,7 +92,7 @@ export default function TaskCard({
 
   const [{ canDrop, isOver }, drop] = useDrop({
     accept: "TASK",
-    drop: (item: { id: number }) => onDrop(item.id, title),
+    drop: (item: { id: string }) => onDrop(item.id, title),
     collect: (monitor) => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
@@ -131,6 +153,8 @@ export default function TaskCard({
         <EditTaskModal
           task={editingTask}
           onClose={() => setEditingTask(null)}
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
           onSave={handleSaveTask}
         />
       )}
