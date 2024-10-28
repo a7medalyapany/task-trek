@@ -9,7 +9,7 @@ interface ViewTaskProps {
   task: Task;
   index: number;
   onEdit: (task: Task) => void;
-  onDelete: (taskId: number) => void;
+  onDelete: (taskId: string) => void;
 }
 
 const ViewTask: FC<ViewTaskProps> = ({ task, onEdit, onDelete }) => {
